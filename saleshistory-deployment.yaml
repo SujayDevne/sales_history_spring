@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: saleshistory-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: saleshistory
+  template:
+    metadata:
+      labels:
+        app: saleshistory
+    spec:
+      containers:
+        - name: saleshistory
+          image: viddeshpowarcap/sprint-springboot
+          ports:
+            - containerPort: 8978
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://database-1.cmdlxfdnrfju.ap-south-1.rds.amazonaws.com:3306/sales_db
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: MYSQL_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secrets
+                  key: MYSQL_PASSWORD
